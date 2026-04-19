@@ -1,0 +1,117 @@
+{
+  "theme_and_archetype": {
+    "theme": "LIGHT",
+    "archetype": "Archetype 3 (Pastel & Soft)",
+    "vibe": "Optimistic, light, tactile, romantic, and dreamy.",
+    "reasoning": "A couples' long-distance app should feel intimate, warm, and playful. Pure clinical dark tech themes or standard white/blue SaaS themes kill the romance. Pastels mixed with high-contrast text and glassmorphism provide a modern, emotional connection."
+  },
+  "typography": {
+    "rules": "Avoid default sans-serifs like Inter. Use 'Outfit' for a modern, rounded, tech-friendly but dreamy display font, and 'Nunito' for highly readable, soft body text.",
+    "fonts": {
+      "headings": {
+        "family": "Outfit",
+        "weights": ["400", "600", "800"],
+        "css_import": "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');"
+      },
+      "body": {
+        "family": "Nunito",
+        "weights": ["400", "500", "600"],
+        "css_import": "@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600&display=swap');"
+      }
+    },
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-800",
+      "h3": "text-xl sm:text-2xl font-semibold text-slate-800",
+      "body": "text-base font-medium text-slate-600 leading-relaxed",
+      "labels": "text-xs font-bold uppercase tracking-[0.15em] text-slate-500"
+    }
+  },
+  "color_palette": {
+    "background": {
+      "base": "#F8FAFC",
+      "gradient_mesh": "bg-gradient-to-br from-[#F3E8FF] via-[#E0F2FE] to-[#FFEDD5]",
+      "watch_room_bg": "bg-[#0F172A]"
+    },
+    "surface": {
+      "glass": "bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]",
+      "solid": "bg-white border border-slate-100 shadow-sm",
+      "watch_room_panel": "bg-white/10 backdrop-blur-xl border border-white/10 text-white"
+    },
+    "text": {
+      "primary": "#0F172A",
+      "secondary": "#475569",
+      "accent": "#9333EA",
+      "watch_room_primary": "#F8FAFC",
+      "watch_room_secondary": "#94A3B8"
+    },
+    "accents": {
+      "lavender": "#D8B4E2",
+      "peach": "#FFD1BA",
+      "baby_blue": "#BDE0FE",
+      "primary_cta": "#1E1B4B",
+      "primary_cta_hover": "#312E81",
+      "danger": "#BE123C",
+      "success": "#10B981"
+    }
+  },
+  "layout_and_spacing": {
+    "spacing_philosophy": "Generous. Use p-6, p-8, and p-12 inside cards and containers to let content breathe and feel less cluttered.",
+    "border_radius": "rounded-3xl for main containers, rounded-2xl for inner cards, rounded-full for buttons.",
+    "grids": {
+      "dashboard": "Bento 'Tetris' Grid. Base: grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6. Mix spans to create asymmetry.",
+      "watch_room": "Control Room Grid. The video player takes up 75% of the screen width on desktop (col-span-9), while the chat/partner video sidebar takes up 25% (col-span-3)."
+    }
+  },
+  "component_strategies": {
+    "buttons": "Pill-shaped (rounded-full). Primary buttons use deep indigo (#1E1B4B) text-white for high contrast against pastels. Hover state adds shadow and slight lift (-translate-y-0.5).",
+    "inputs": "Shadcn inputs customized with rounded-xl, bg-white/50 focus:bg-white focus:ring-2 focus:ring-lavender-400 border-slate-200.",
+    "chat_bubbles": "Partner: bg-white text-slate-800 rounded-2xl rounded-tl-sm. You: bg-[#1E1B4B] text-white rounded-2xl rounded-tr-sm. Generous padding p-4.",
+    "partner_video_pip": "Floating circular or soft-rectangle (rounded-3xl) picture-in-picture overlay in the corner of the watch room. 1px solid white/20 border, heavy backdrop blur.",
+    "reactions": "Floating emoji buttons in the chat input area. When clicked, emojis should animate floating up the screen (using Framer Motion)."
+  },
+  "motion_and_interaction": {
+    "transitions": "All interactive elements must use smooth transitions (e.g., transition-all duration-300 ease-out).",
+    "page_load": "Fade-in with a slight upward translation (y: 10 -> 0) using framer-motion.",
+    "watch_room_sync": "Visual ripple effect around the play/pause button when a sync signal is received from the partner."
+  },
+  "icons_and_assets": {
+    "library": "lucide-react",
+    "style": "Use stroke-width 2, round edges. Keep them consistent."
+  },
+  "media": {
+    "instructions": "Use these exact URLs. DO NOT USE PLACEHOLDERS.",
+    "images": {
+      "hero_dashboard": {
+        "url": "https://images.unsplash.com/photo-1758522490530-7025eaa5009c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxoYXBweSUyMGNvdXBsZSUyMGxhcHRvcCUyMGJlZHxlbnwwfHx8fDE3NzY1ODI5OTN8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Couple watching laptop together in bed"
+      },
+      "login_background": {
+        "url": "https://images.pexels.com/photos/2088142/pexels-photo-2088142.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Dreamy pastel pink and blue cloud background"
+      },
+      "watch_room_idle": {
+        "url": "https://images.pexels.com/photos/21832930/pexels-photo-21832930.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Cozy laptop movie streaming setup"
+      },
+      "avatar_partner": {
+        "url": "https://images.unsplash.com/photo-1628148061873-13b9340f763b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwyfHxjdXRlJTIwZmx1ZmZ5JTIwYW5pbWFsJTIwYXZhdGFyfGVufDB8fHx8MTc3NjU4Mjk5M3ww&ixlib=rb-4.1.0&q=85",
+        "description": "Cute animal avatar 1"
+      },
+      "avatar_user": {
+        "url": "https://images.unsplash.com/photo-1576201503375-4eb0ea0f850e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHxjdXRlJTIwZmx1ZmZ5JTIwYW5pbWFsJTIwYXZhdGFyfGVufDB8fHx8MTc3NjU4Mjk5M3ww&ixlib=rb-4.1.0&q=85",
+        "description": "Cute animal avatar 2"
+      }
+    }
+  },
+  "instructions_to_main_agent": [
+    "1. Do not use Inter or any generic sans-serif for headings. Always import and apply 'Outfit' for headings and 'Nunito' for body.",
+    "2. All cards and overlays MUST use the defined Crystal Glassmorphism surface: bg-white/60, backdrop-blur-2xl, border-white/40.",
+    "3. Use the 'Bento Tetris' pattern for the dashboard: irregular, engaging grid spans, heavily padded, leaving intentional empty cells if needed.",
+    "4. For the Watch Room, switch the background to dark mode (#0F172A) to simulate 'lights out' for movie watching, but retain glassmorphism on the chat/video sidebar (bg-white/10).",
+    "5. Every button, input, or toggle MUST have a focus state with high contrast (e.g. ring-2 ring-indigo-900).",
+    "6. Do not use Shadcn components without stripping their default rigid Vercel-like borders/shadows and applying our soft, pastel, rounded-2xl styles.",
+    "7. Include data-testid attributes on all interactive elements using kebab-case and role-based naming.",
+    "8. Never use placeholder images. Rely solely on the media object URLs provided."
+  ]
+}
