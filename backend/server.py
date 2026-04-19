@@ -138,6 +138,14 @@ class WatchlistReq(BaseModel):
     notes: str = ""
 
 
+class DateNightReq(BaseModel):
+    title: str
+    date: str
+    time: str = "20:00"
+    movie: str = ""
+    notes: str = ""
+
+
 def set_auth_cookies(response: Response, access_token: str, refresh_token: str):
     response.set_cookie("access_token", access_token, httponly=True, secure=False, samesite="lax", max_age=86400, path="/")
     response.set_cookie("refresh_token", refresh_token, httponly=True, secure=False, samesite="lax", max_age=604800, path="/")
@@ -324,6 +332,60 @@ async def delete_watchlist(item_id: str, request: Request):
     return {"message": "Deleted"}
 
 
+# Date Night Planner
+@api_router.get("/date-nights")
+async def get_date_nights(request: Request):
+    user = await get_current_user(request)
+    if not user.get("couple_id"):
+        return []
+    return await db.date_nights.find({"couple_id": user["couple_id"]}, {"_id": 0}).sort("date", 1).to_list(100)
+
+
+@api_router.post("/date-nights")
+async def create_date_night(req: DateNightReq, request: Request):
+    user = await get_current_user(request)
+    if not user.get("couple_id"):
+        raise HTTPException(400, "Not paired yet")
+    doc = {
+        "id": secrets.token_hex(8),
+        "couple_id": user["couple_id"],
+        "title": req.title,
+        "date": req.date,
+        "time": req.time,
+        "movie": req.movie,
+        "notes": req.notes,
+        "created_by": user["name"],
+        "status": "upcoming",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.date_nights.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+
+@api_router.put("/date-nights/{night_id}")
+async def update_date_night(night_id: str, request: Request):
+    user = await get_current_user(request)
+    body = await request.json()
+    update_fields = {}
+    for field in ["title", "date", "time", "movie", "notes", "status"]:
+        if field in body:
+            update_fields[field] = body[field]
+    if update_fields:
+        await db.date_nights.update_one(
+            {"id": night_id, "couple_id": user.get("couple_id")},
+            {"$set": update_fields},
+        )
+    return {"message": "Updated"}
+
+
+@api_router.delete("/date-nights/{night_id}")
+async def delete_date_night(night_id: str, request: Request):
+    user = await get_current_user(request)
+    await db.date_nights.delete_one({"id": night_id, "couple_id": user.get("couple_id")})
+    return {"message": "Deleted"}
+
+
 @api_router.get("/messages")
 async def get_messages(request: Request, limit: int = 50):
     user = await get_current_user(request)
@@ -432,6 +494,7 @@ async def startup():
     await db.users.create_index("pairing_code")
     await db.messages.create_index("couple_id")
     await db.watchlist.create_index("couple_id")
+    await db.date_nights.create_index("couple_id")
     admin_email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
     admin_password = os.environ.get("ADMIN_PASSWORD", "admin123")
     existing = await db.users.find_one({"email": admin_email})

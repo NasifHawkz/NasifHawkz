@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
+import DateNightPlanner from "@/components/DateNightPlanner";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -282,6 +283,11 @@ export default function Dashboard() {
               <p className="font-semibold text-slate-800 text-sm">Chat</p>
               <p className="text-xs text-slate-500 mt-1">Send messages</p>
             </button>
+          </div>
+
+          {/* Date Night Planner */}
+          <div className="md:col-span-8 lg:col-span-12">
+            <DateNightPlanner watchlist={watchlist} isPaired={isPaired} />
           </div>
 
           {/* Watchlist */}

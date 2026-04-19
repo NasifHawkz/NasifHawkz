@@ -222,6 +222,99 @@ class TestIceConfig:
         assert any("stun:" in str(u) for u in stun_urls), f"No STUN servers found: {stun_urls}"
 
 
+# --- date nights ---
+class TestDateNights:
+    created_ids = []
+
+    def test_list_requires_auth(self):
+        r = requests.get(f"{API}/date-nights", timeout=10)
+        assert r.status_code == 401
+
+    def test_list_initial(self, alice_session):
+        s, data = alice_session
+        r = s.get(f"{API}/date-nights", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert r.status_code == 200
+        assert isinstance(r.json(), list)
+
+    def test_create_date_night(self, alice_session):
+        s, data = alice_session
+        title = f"TEST_DN_{secrets.token_hex(3)}"
+        payload = {"title": title, "date": "2026-06-15", "time": "21:00", "movie": "Inception", "notes": "popcorn"}
+        r = s.post(f"{API}/date-nights", json=payload,
+                   headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert r.status_code == 200, r.text
+        body = r.json()
+        assert body["title"] == title
+        assert body["date"] == "2026-06-15"
+        assert body["time"] == "21:00"
+        assert body["movie"] == "Inception"
+        assert body["status"] == "upcoming"
+        assert body["id"]
+        TestDateNights.created_ids.append(body["id"])
+
+        # GET to verify persistence
+        r2 = s.get(f"{API}/date-nights", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert any(n["id"] == body["id"] and n["title"] == title for n in r2.json())
+
+    def test_partner_sees_date_night(self, alice_session, bob_session):
+        sa, da = alice_session
+        sb, db_ = bob_session
+        title = f"TEST_DN_Shared_{secrets.token_hex(3)}"
+        r = sa.post(f"{API}/date-nights",
+                    json={"title": title, "date": "2026-07-20", "time": "20:30"},
+                    headers={"Authorization": f"Bearer {da['token']}"}, timeout=10)
+        assert r.status_code == 200
+        nid = r.json()["id"]
+        TestDateNights.created_ids.append(nid)
+        r2 = sb.get(f"{API}/date-nights", headers={"Authorization": f"Bearer {db_['token']}"}, timeout=10)
+        assert r2.status_code == 200
+        assert any(n["id"] == nid for n in r2.json())
+
+    def test_update_status_complete(self, alice_session):
+        s, data = alice_session
+        r = s.post(f"{API}/date-nights", json={"title": f"TEST_DN_Upd_{secrets.token_hex(3)}", "date": "2026-08-01", "time": "20:00"},
+                   headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        nid = r.json()["id"]
+        TestDateNights.created_ids.append(nid)
+        r2 = s.put(f"{API}/date-nights/{nid}", json={"status": "completed"},
+                   headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert r2.status_code == 200
+        # Verify via GET
+        r3 = s.get(f"{API}/date-nights", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        match = [n for n in r3.json() if n["id"] == nid]
+        assert match and match[0]["status"] == "completed"
+
+    def test_delete_date_night(self, alice_session):
+        s, data = alice_session
+        r = s.post(f"{API}/date-nights", json={"title": f"TEST_DN_Del_{secrets.token_hex(3)}", "date": "2026-09-10", "time": "19:30"},
+                   headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        nid = r.json()["id"]
+        r2 = s.delete(f"{API}/date-nights/{nid}",
+                      headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert r2.status_code == 200
+        r3 = s.get(f"{API}/date-nights", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert not any(n["id"] == nid for n in r3.json())
+
+    def test_create_unpaired_blocked(self):
+        # Fresh unpaired user cannot create date nights
+        email = f"test_{secrets.token_hex(4)}@test.com"
+        r = requests.post(f"{API}/auth/register", json={"email": email, "password": "pw12345", "name": "Solo"}, timeout=10)
+        assert r.status_code == 200
+        tok = r.json()["token"]
+        r2 = requests.post(f"{API}/date-nights", json={"title": "nope", "date": "2026-10-01", "time": "20:00"},
+                           headers={"Authorization": f"Bearer {tok}"}, timeout=10)
+        assert r2.status_code == 400
+
+    @classmethod
+    def teardown_class(cls):
+        try:
+            s, data = _login(ALICE)
+            for nid in cls.created_ids:
+                s.delete(f"{API}/date-nights/{nid}", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        except Exception:
+            pass
+
+
 # --- messages ---
 class TestMessages:
     def test_get_messages(self, alice_session):

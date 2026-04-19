@@ -1,0 +1,32 @@
+{
+  "summary": "Iteration 4 full regression PASSED. Backend: 30/30 pytest (added 7 new date-night tests: auth-required, list, create w/ persistence, partner visibility, status update + GET verification, delete + GET verification, unpaired-user 400). Frontend: Logged in as Alice, dashboard loads with DATE NIGHT PLANNER section visible, Next Date Night card shows 'Movie Night: Stranger Things' with countdown 'in 6 days' + Sat, Apr 25 / 20:00 / 'Watching: Stranger Things' / 'Grab popcorn and blankets!', Upcoming 'Rom-Com Marathon' visible (Sat, May 2 at 19:30), Plan button opens dialog with title input + date picker + time selector + optional movie + notes, Calendar picker shows current month with 21 past days DISABLED (confirmed via DOM query), created 'TEST_UI_Night' successfully via the dialog (appeared on dashboard), Mark Complete fired toast 'Hope you had a great time!' and moved item to PAST with strikethrough, Delete removed item from list. Watchlist section still renders. Navigation to /watch works and chat input is visible.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dashboard - DateNightPlanner upcoming row", "issues": ["Complete/delete action buttons are hidden until hover (opacity-0 group-hover:opacity-100) - not discoverable on touch devices; consider always-visible with lower opacity or a kebab menu on mobile."]},
+      {"screen": "Dashboard - Partner card", "issues": ["'Offline' badge low contrast on pastel bg (carry-over from iter 1-3, non-blocking)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "DateNightPlanner.js: PUT /api/date-nights/{id} endpoint accepts any field subset (title/date/time/movie/notes/status) but frontend only sends {status:'completed'} on markComplete - good; no edit flow is exposed to users yet (create-only). Consider adding an edit dialog in a future iteration.",
+    "DateNightPlanner.js line 127: past filter uses `isPast(new Date(\\`${n.date}T23:59:59\\`))` without timezone - may incorrectly flip a date to 'past' for users in late-offset timezones. Acceptable for MVP but worth noting.",
+    "server.py /api/date-nights PUT has no Pydantic model for the body (accepts raw request.json) and silently ignores unknown keys - low risk but deviates from the rest of the API which uses BaseModel. Consider a DateNightUpdateReq model with optional fields for consistency/validation.",
+    "server.py /api/date-nights DELETE returns 200 even when the night_id does not exist or belongs to another couple - idempotent-delete is acceptable but a 404 would be stricter.",
+    "Auth playbook spot-check: bcrypt hash stored starts with $2b$ (verified via login roundtrip), httpOnly cookies set on login (access_token + refresh_token), CORS allow_credentials is True when origins are explicit, seed_admin is idempotent (find_one->insert_one guarded). NOTE: no brute-force lockout is implemented (iter-1..4) - out of scope for this feature but flag for future."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (30/30)", "frontend": "100% (all 15 requested flows verified)"},
+  "test_credentials": "alice@test.com / test123 (paired with Bob); bob@test.com / test123; admin@example.com / admin123",
+  "seed_data_creation": "Restored pre-existing seed after UI test: 'Movie Night: Stranger Things' (2026-04-25 20:00) and 'Rom-Com Marathon' (2026-05-02 19:30) for Alice<->Bob couple. All TEST_ artifacts cleaned up via teardown_class + manual cleanup script.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Date Night Planner feature is fully working end-to-end: GET/POST/PUT/DELETE /api/date-nights all pass with persistence verification; UI dialog, calendar picker (past-disabled), time select, create/complete/delete all verified via Playwright. The complete/delete buttons on upcoming rows use opacity-0+group-hover pattern - Playwright works fine because .click() does not require visibility by default, but flag this if real users on mobile report discoverability issues. Seed data re-added. Backend /api/date-nights PUT accepts arbitrary body without Pydantic validation - not a bug but a consistency comment.",
+  "rca_of_the_issue": "No bugs found in this iteration."
+}
