@@ -1,34 +1,127 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+.gradient-mesh {
+    background: linear-gradient(135deg, #F3E8FF 0%, #E0F2FE 50%, #FFEDD5 100%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
+.glass-dark {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bubble-partner {
+    background: white;
+    color: #1e293b;
+    border-radius: 1rem 1rem 1rem 0.25rem;
+}
+
+.bubble-self {
+    background: #1E1B4B;
     color: white;
+    border-radius: 1rem 1rem 0.25rem 1rem;
 }
 
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
+@keyframes fadeInUp {
     from {
-        transform: rotate(0deg);
+        opacity: 0;
+        transform: translateY(12px);
     }
     to {
-        transform: rotate(360deg);
+        opacity: 1;
+        transform: translateY(0);
     }
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-80px) scale(1.4);
+    }
+}
+
+@keyframes pulse-soft {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out both;
+}
+
+.animate-float-up {
+    animation: floatUp 1.2s ease-out forwards;
+}
+
+.animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.animate-ripple {
+    animation: ripple 0.6s ease-out;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+.chat-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 2px;
+}
+
+.btn-lift {
+    transition: all 0.3s ease-out;
+}
+.btn-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 27, 75, 0.2);
+}
+
+.watch-room-bg {
+    background-color: #0F172A;
+}
+
+.typing-dot {
+    animation: pulse-soft 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
 }

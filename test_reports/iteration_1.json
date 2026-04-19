@@ -1,0 +1,57 @@
+{
+  "summary": "First-run end-to-end testing of DuoWatch couples app. Backend 21/21 tests passing (auth, partner pairing, watchlist CRUD, messages). Frontend register/login/logout/dashboard/watchlist add/watch-room UI all render with correct data-testids. Critical bug: Chat send in WatchRoom does not deliver message to chat area despite WebSocket being open.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "startup event", "issue": "Server startup overwrites /app/memory/test_credentials.md on every boot, dropping Alice/Bob test user entries (only admin remains). Consider using 'a' mode or skip if already populated."},
+      {"endpoint": "/api/auth/me", "issue": "Endpoint re-issues a fresh access token on every call. Can cause token churn/inconsistency for the frontend WS which caches token from auth response."},
+      {"endpoint": "cookies secure=False", "issue": "set_cookie uses secure=False on httpOnly cookies served over HTTPS in preview env. Fine for now but should be True in production."},
+      {"endpoint": "CORS", "issue": "Falls back to allow_origins=['*'] with allow_credentials=False when FRONTEND_URL is not whitelisted explicitly; current env sets CORS_ORIGINS='*' which is filtered out. Works because frontend uses Bearer headers via axios, but cookie-based auth from browser depends on explicit origin."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "WatchRoom/Chat", "issue": "Clicking chat-send-button does NOT deliver the typed message to the chat messages area. Message text remains in input; 'No messages yet' state persists; WebSocket connects (WS OPEN) then closes later with no chat_message broadcast observed. Likely causes: (a) handleSend fires before WS is ready (ws.readyState !== OPEN so message dropped silently), (b) WebRTC/WS lifecycle in WatchRoom closing the socket on rerender, or (c) onSend prop not wired when WS not open.", "selector": "[data-testid=chat-send-button]", "priority": "CRITICAL"},
+      {"component": "WatchRoom WebSocket", "issue": "Console shows 'WebSocket connection ... failed: WebSocket is closed before the connection is established.' on first connect attempt, then a second WS successfully opens. Suggests React StrictMode double-mount or useEffect cleanup aborting the first handshake. Needs proper connection guard and waiting for OPEN state before sending.", "selector": "wss://.../api/ws?token=...", "priority": "HIGH"},
+      {"component": "Dialog (Radix)", "issue": "Multiple console warnings: 'Missing Description or aria-describedby={undefined} for {DialogContent}'. Add <DialogDescription> inside each DialogContent (Dashboard Add-to-Watchlist dialog).", "selector": "DialogContent", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Realtime chat over WS", "issue": "Messages sent from paired user (Alice) never appear in own chat window. Server endpoint echoes to sender (await websocket.send_json({...})) so if WS were truly open and client called send(JSON) correctly, bubble should appear. Requires checking WatchRoom.js onSend implementation and ws.readyState check.", "affected_selectors": ["[data-testid=chat-send-button]", "[data-testid=chat-messages]"]}
+    ],
+    "design_issues": [
+      {"screen": "Dashboard (paired state)", "issues": ["'Hey, Alice' header text color is very light grey on white—low contrast.", "Partner Offline badge uses pastel green on near-white, hard to read."]},
+      {"screen": "WatchRoom", "issues": ["Send button appears hidden/clipped on right edge of chat input row at some widths—verify flex shrink behavior."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "CRITICAL: Fix chat send in WatchRoom. Verify WebSocket readyState===OPEN before calling ws.send; queue outgoing messages until OPEN or show a toast when disconnected.",
+    "HIGH: Guard WebSocket creation against React StrictMode double-mount (use a ref or AbortController for cleanup) to avoid 'closed before established' warning.",
+    "MEDIUM: Add DialogDescription to shadcn Dialog usages to fix a11y console warnings.",
+    "LOW: Make startup test_credentials.md write idempotent or append only; current impl wipes Alice/Bob info.",
+    "LOW: In production set cookie secure=True and set_cookie samesite='none' when serving HTTPS cross-site."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 442 lines in a single file—split into auth.py, partner.py, watchlist.py, chat_ws.py modules for maintainability.",
+    "No brute-force lockout / rate limiting on /api/auth/login (playbook requirement: lockout after 5 failures).",
+    "refresh_token cookie is httpOnly but no rotation: refresh always returns access only; consider rotating refresh token on each use.",
+    "bcrypt.hashpw default rounds=12 is fine; hash format starts with $2b$ (verified).",
+    "Watchlist PUT has no input validation (request.json() parsed ad-hoc); use Pydantic model like other endpoints.",
+    "ConnectionManager stores WebSockets in-memory; will not scale across multiple backend workers. OK for MVP.",
+    "get_me re-issues a new access_token on every call which can clash with WS token cached on client—either drop re-issue or propagate back to frontend token state.",
+    "CORS: when FRONTEND_URL + CORS_ORIGINS filter yields empty, falls back to '*' with credentials=False — breaks cookie-based login from the browser if ever needed.",
+    "Frontend: React StrictMode + WebSocket lifecycle causes warning on every WatchRoom mount; add ref-guard for socket creation.",
+    "Frontend: Dashboard uses axios withCredentials but also sends Authorization header elsewhere—standardize one auth strategy."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100%", "frontend": "75%"},
+  "test_credentials": "alice@test.com/test123 (paired), bob@test.com/test123 (paired), admin@example.com/admin123",
+  "seed_data_creation": "Tests create ephemeral TEST_ watchlist items and register transient users (test_<hex>@test.com); cleaned up in teardown where possible.",
+  "retest_needed": true,
+  "main_agent_can_self_test": false,
+  "context_for_next_testing_agent": "Backend API surface is stable (21/21). Re-run backend_test.py after any server.py change. For the chat bug: the WatchRoom WebSocket opens (confirmed via page.on('websocket')) and closes later cleanly, but chat_message never renders in [data-testid=chat-messages]. Suspect WatchRoom's onSend fires before readyState===1. Also note /api/auth/me issues a fresh token each call which may desynchronize the WS query-param token. Use Alice login flow and navigate to /watch to reproduce quickly.",
+  "rca_of_the_issue": "Chat send failure RCA hypothesis: (1) WatchRoom creates WS in useEffect and likely calls ws.current?.send(JSON.stringify(...)) inside onSend. (2) In StrictMode the first effect run creates a WS, cleanup closes it (hence 'closed before established'), second run opens a new one. (3) If onSend is invoked while ws.current still references the first (closed) socket, send() silently fails with no exception. Fix: store WS in a ref, check readyState before send, and gate the UI 'send' button with connection status; also use a ref guard to prevent double-creation in StrictMode."
+}
