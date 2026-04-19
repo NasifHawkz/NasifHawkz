@@ -116,7 +116,7 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
       )}
 
       {/* Input */}
-      <div className="p-3 border-t border-white/10">
+      <div className="p-3 pb-14 border-t border-white/10">
         <div className="flex items-center gap-2">
           <button
             data-testid="emoji-toggle-button"

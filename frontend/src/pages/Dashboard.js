@@ -177,12 +177,12 @@ export default function Dashboard() {
             {isPaired ? (
               <div>
                 <p className="text-base font-semibold text-slate-800 mb-2">{partnerInfo.partner_name}</p>
-                <Badge
+                  <Badge
                   data-testid="partner-status-badge"
                   className={`rounded-full text-xs ${
                     partnerInfo.is_online
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-slate-100 text-slate-500"
+                      ? "bg-emerald-500 text-white"
+                      : "bg-slate-200 text-slate-600"
                   }`}
                 >
                   <CircleDot className="w-3 h-3 mr-1" />
