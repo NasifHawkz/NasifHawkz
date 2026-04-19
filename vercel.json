@@ -1,0 +1,24 @@
+{
+  "buildCommand": "cd frontend && yarn install --ignore-optional && yarn build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && yarn install --ignore-optional",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://duo-watch-connect.preview.emergentagent.com/api/$1"
+    },
+    {
+      "source": "/((?!static|asset-manifest|favicon|logo|manifest|robots).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}
