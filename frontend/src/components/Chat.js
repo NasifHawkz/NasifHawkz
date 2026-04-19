@@ -1,20 +1,39 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send, Smile, X } from "lucide-react";
+import { Send, Smile, X, Check, CheckCheck } from "lucide-react";
 import EmojiReactions, { QuickReactions } from "@/components/EmojiReactions";
 
-export default function Chat({ messages, onSend, onReaction, userId, isDark = false }) {
+export default function Chat({
+  messages,
+  onSend,
+  onReaction,
+  onTyping,
+  onRead,
+  userId,
+  isPartnerTyping = false,
+  partnerLastReadId = null,
+  partnerName = "",
+  isDark = false,
+}) {
   const [text, setText] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
   const [hoveredMsg, setHoveredMsg] = useState(null);
   const scrollRef = useRef(null);
+  const typingThrottleRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+    // Send read receipt for the latest message
+    if (messages.length > 0 && onRead) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.sender_id !== userId) {
+        onRead(lastMsg.id);
+      }
+    }
+  }, [messages, userId, onRead]);
 
   const handleSend = () => {
     if (!text.trim()) return;
@@ -32,11 +51,26 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
     setShowEmojis(false);
   };
 
-  const textColor = isDark ? "text-slate-200" : "text-slate-800";
+  const handleTyping = useCallback(
+    (e) => {
+      setText(e.target.value);
+      if (onTyping && !typingThrottleRef.current) {
+        onTyping();
+        typingThrottleRef.current = setTimeout(() => {
+          typingThrottleRef.current = null;
+        }, 2000);
+      }
+    },
+    [onTyping]
+  );
+
   const mutedColor = isDark ? "text-slate-400" : "text-slate-500";
   const inputBg = isDark
     ? "bg-white/10 border-white/10 text-white placeholder:text-slate-400"
     : "bg-white/50 border-slate-200 text-slate-800";
+
+  // Find the last self-message for read receipt display
+  const lastSelfMsgId = [...messages].reverse().find((m) => m.sender_id === userId)?.id;
 
   return (
     <div className="flex flex-col h-full">
@@ -54,6 +88,7 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
         )}
         {messages.map((msg) => {
           const isSelf = msg.sender_id === userId;
+          const isRead = isSelf && partnerLastReadId && msg.id === lastSelfMsgId;
           return (
             <div
               key={msg.id}
@@ -68,7 +103,11 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
                 ) : (
                   <div className={`px-4 py-2.5 ${isSelf ? "bubble-self" : "bubble-partner"}`}>
                     {!isSelf && (
-                      <p className={`text-[10px] font-bold mb-0.5 ${isDark ? "text-purple-300" : "text-purple-500"}`}>
+                      <p
+                        className={`text-[10px] font-bold mb-0.5 ${
+                          isDark ? "text-purple-300" : "text-purple-500"
+                        }`}
+                      >
                         {msg.sender_name}
                       </p>
                     )}
@@ -95,13 +134,44 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
                     <QuickReactions onReact={(emoji) => onReaction(msg.id, emoji)} />
                   </div>
                 )}
-                <p className={`text-[10px] mt-1 ${isSelf ? "text-right" : "text-left"} ${mutedColor}`}>
-                  {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </p>
+                {/* Timestamp + Read receipt */}
+                <div className={`flex items-center gap-1 mt-1 ${isSelf ? "justify-end" : "justify-start"}`}>
+                  <p className={`text-[10px] ${mutedColor}`}>
+                    {new Date(msg.created_at).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  {isSelf && (
+                    <span data-testid={`read-receipt-${msg.id}`}>
+                      {isRead ? (
+                        <CheckCheck className="w-3 h-3 text-[#BDE0FE]" />
+                      ) : (
+                        <Check className="w-3 h-3 text-slate-500" />
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           );
         })}
+
+        {/* Typing indicator */}
+        {isPartnerTyping && (
+          <div className="flex justify-start" data-testid="typing-indicator">
+            <div className="bubble-partner px-4 py-2.5">
+              <p className={`text-[10px] font-bold mb-0.5 ${isDark ? "text-purple-300" : "text-purple-500"}`}>
+                {partnerName || "Partner"}
+              </p>
+              <div className="flex gap-1 items-center h-5">
+                <span className="w-2 h-2 rounded-full bg-slate-400 typing-dot" />
+                <span className="w-2 h-2 rounded-full bg-slate-400 typing-dot" />
+                <span className="w-2 h-2 rounded-full bg-slate-400 typing-dot" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Emoji Picker */}
@@ -134,7 +204,7 @@ export default function Chat({ messages, onSend, onReaction, userId, isDark = fa
           <Input
             data-testid="chat-input"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleTyping}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Type a message..."
             className={`flex-1 rounded-full h-10 text-sm ${inputBg}`}

@@ -54,6 +54,10 @@ export default function WatchRoom() {
   const [showChat, setShowChat] = useState(true);
   const [syncNotif, setSyncNotif] = useState(null);
   const [floatingReactions, setFloatingReactions] = useState([]);
+  const [isPartnerTyping, setIsPartnerTyping] = useState(false);
+  const [partnerLastReadId, setPartnerLastReadId] = useState(null);
+  const [iceConfig, setIceConfig] = useState(ICE_CONFIG);
+  const typingTimeoutRef = useRef(null);
 
   // Refs
   const wsRef = useRef(null);
@@ -74,6 +78,14 @@ export default function WatchRoom() {
     axios
       .get(`${API}/messages?limit=50`, { withCredentials: true })
       .then(({ data }) => setMessages(data))
+      .catch(() => {});
+  }, []);
+
+  // Fetch ICE config (TURN/STUN servers)
+  useEffect(() => {
+    axios
+      .get(`${API}/ice-config`, { withCredentials: true })
+      .then(({ data }) => { if (data?.iceServers) setIceConfig(data); })
       .catch(() => {});
   }, []);
 
@@ -190,6 +202,14 @@ export default function WatchRoom() {
         if (screenVideoRef.current) screenVideoRef.current.srcObject = null;
         toast.info("Screen sharing stopped");
         break;
+      case "typing":
+        setIsPartnerTyping(true);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => setIsPartnerTyping(false), 3000);
+        break;
+      case "messages_read":
+        setPartnerLastReadId(data.last_message_id);
+        break;
       default:
         break;
     }
@@ -205,7 +225,7 @@ export default function WatchRoom() {
         video: { width: { ideal: 1920 }, height: { ideal: 1080 }, frameRate: { ideal: 30 } },
         audio: true,
       });
-      const pc = new RTCPeerConnection(ICE_CONFIG);
+      const pc = new RTCPeerConnection(iceConfig);
       stream.getTracks().forEach((t) => pc.addTrack(t, stream));
       pc.onicecandidate = (e) => {
         if (e.candidate)
@@ -244,7 +264,7 @@ export default function WatchRoom() {
         audio: true,
       });
       if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-      const pc = new RTCPeerConnection(ICE_CONFIG);
+      const pc = new RTCPeerConnection(iceConfig);
       stream.getTracks().forEach((t) => pc.addTrack(t, stream));
       pc.ontrack = (e) => {
         if (remoteVideoRef.current) remoteVideoRef.current.srcObject = e.streams[0];
@@ -305,7 +325,7 @@ export default function WatchRoom() {
   // WebRTC signaling handlers
   const handleOffer = async (data) => {
     const purpose = data.purpose || "screen";
-    const pc = new RTCPeerConnection(ICE_CONFIG);
+    const pc = new RTCPeerConnection(iceConfig);
     if (purpose === "screen") {
       pc.ontrack = (e) => {
         if (screenVideoRef.current) screenVideoRef.current.srcObject = e.streams[0];
@@ -403,6 +423,18 @@ export default function WatchRoom() {
   const sendReaction = (messageId, emoji) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ type: "reaction", message_id: messageId, emoji }));
+    }
+  };
+
+  const sendTyping = () => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "typing" }));
+    }
+  };
+
+  const sendReadReceipt = (lastMsgId) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN && lastMsgId) {
+      wsRef.current.send(JSON.stringify({ type: "messages_read", last_message_id: lastMsgId }));
     }
   };
 
@@ -639,7 +671,12 @@ export default function WatchRoom() {
               messages={messages}
               onSend={sendMessage}
               onReaction={sendReaction}
+              onTyping={sendTyping}
+              onRead={sendReadReceipt}
               userId={user?.id}
+              isPartnerTyping={isPartnerTyping}
+              partnerLastReadId={partnerLastReadId}
+              partnerName={partnerName}
               isDark={true}
             />
           </div>

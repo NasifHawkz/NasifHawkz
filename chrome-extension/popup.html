@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DuoWatch</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Login View -->
+    <div id="login-view">
+      <div class="header">
+        <div class="logo">
+          <img src="icons/icon48.png" alt="DuoWatch" width="32" height="32">
+          <div>
+            <h1>DuoWatch</h1>
+            <p class="subtitle">Netflix Sync</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Server URL</label>
+        <input id="server-url" type="url" placeholder="https://your-app.preview.emergentagent.com" data-testid="ext-server-url">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="login-email" type="email" placeholder="you@example.com" data-testid="ext-login-email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input id="login-password" type="password" placeholder="Your password" data-testid="ext-login-password">
+      </div>
+      <div id="login-error" class="error" style="display:none" data-testid="ext-login-error"></div>
+      <button id="login-btn" class="btn-primary" data-testid="ext-login-btn">Connect</button>
+    </div>
+
+    <!-- Connected View -->
+    <div id="connected-view" style="display:none">
+      <div class="header">
+        <div class="logo">
+          <img src="icons/icon48.png" alt="DuoWatch" width="28" height="28">
+          <div>
+            <h1>DuoWatch</h1>
+            <p class="subtitle" id="user-name-display">Connected</p>
+          </div>
+        </div>
+        <div id="connection-dot" class="status-dot connected"></div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-row">
+          <span class="status-label">Connection</span>
+          <span id="conn-status" class="status-value connected">Connected</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Partner</span>
+          <span id="partner-status" class="status-value">Waiting...</span>
+        </div>
+      </div>
+
+      <div class="sync-section">
+        <div class="sync-toggle-row">
+          <span>Netflix Sync</span>
+          <label class="toggle">
+            <input type="checkbox" id="sync-toggle" checked data-testid="ext-sync-toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <p class="sync-hint">Open Netflix in any tab to start syncing playback with your partner.</p>
+      </div>
+
+      <div class="actions">
+        <button id="reconnect-btn" class="btn-secondary" data-testid="ext-reconnect-btn">Reconnect</button>
+        <button id="logout-btn" class="btn-danger" data-testid="ext-logout-btn">Disconnect</button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -334,6 +334,24 @@ async def get_messages(request: Request, limit: int = 50):
     return msgs
 
 
+@api_router.get("/ice-config")
+async def get_ice_config(request: Request):
+    await get_current_user(request)
+    servers = [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "stun:stun1.l.google.com:19302"},
+        {"urls": "stun:stun2.l.google.com:19302"},
+        {"urls": "stun:stun3.l.google.com:19302"},
+        {"urls": "stun:stun4.l.google.com:19302"},
+    ]
+    turn_url = os.environ.get("TURN_URL")
+    turn_user = os.environ.get("TURN_USERNAME")
+    turn_cred = os.environ.get("TURN_CREDENTIAL")
+    if turn_url and turn_user and turn_cred:
+        servers.append({"urls": turn_url, "username": turn_user, "credential": turn_cred})
+    return {"iceServers": servers}
+
+
 @app.websocket("/api/ws")
 async def ws_endpoint(websocket: WebSocket, token: str = Query(...)):
     user = await get_user_from_token(token)

@@ -202,6 +202,26 @@ class TestWatchlist:
             pass
 
 
+# --- ice-config ---
+class TestIceConfig:
+    def test_ice_config_requires_auth(self):
+        r = requests.get(f"{API}/ice-config", timeout=10)
+        assert r.status_code == 401
+
+    def test_ice_config_returns_stun(self, alice_session):
+        s, data = alice_session
+        r = s.get(f"{API}/ice-config", headers={"Authorization": f"Bearer {data['token']}"}, timeout=10)
+        assert r.status_code == 200
+        body = r.json()
+        assert "iceServers" in body
+        servers = body["iceServers"]
+        assert isinstance(servers, list)
+        assert len(servers) >= 1
+        # Verify at least one STUN server
+        stun_urls = [s["urls"] for s in servers if "urls" in s]
+        assert any("stun:" in str(u) for u in stun_urls), f"No STUN servers found: {stun_urls}"
+
+
 # --- messages ---
 class TestMessages:
     def test_get_messages(self, alice_session):
