@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -306,6 +307,7 @@ export default function Dashboard() {
                 <DialogContent className="glass-card border-white/40 rounded-3xl">
                   <DialogHeader>
                     <DialogTitle className="font-bold text-slate-800">Add to Watchlist</DialogTitle>
+                    <DialogDescription className="text-sm text-slate-500">Add a movie or show to your shared watchlist</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 pt-2">
                     <Input

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -66,6 +66,8 @@ export default function WatchRoom() {
   const remoteVideoRef = useRef(null);
   const iceCandidatesQueue = useRef({ screen: [], call: [] });
   const reconnectTimer = useRef(null);
+  const cleaningUpRef = useRef(false);
+  const handleWSMessageRef = useRef(null);
 
   // Load chat history
   useEffect(() => {
@@ -85,55 +87,58 @@ export default function WatchRoom() {
       .catch(() => {});
   }, []);
 
-  // WebSocket connection
-  const connectWS = useCallback(() => {
+  // Keep message handler ref current - assigned after definition below
+  // handleWSMessageRef.current is set below after handleWSMessage is defined
+
+  // WebSocket connection - guards against StrictMode double-mount
+  useEffect(() => {
     if (!token || !user?.couple_id) return;
+    cleaningUpRef.current = false;
+    const timerRef = reconnectTimer.current;
+
     const wsUrl = `${BACKEND_URL.replace(/^http/, "ws")}/api/ws?token=${token}`;
     const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
 
     ws.onopen = () => {
-      setWsConnected(true);
-      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      if (!cleaningUpRef.current) setWsConnected(true);
     };
 
     ws.onclose = () => {
-      setWsConnected(false);
-      setPartnerOnline(false);
-      reconnectTimer.current = setTimeout(connectWS, 3000);
+      if (!cleaningUpRef.current) {
+        setWsConnected(false);
+        setPartnerOnline(false);
+      }
     };
 
     ws.onmessage = (e) => {
+      if (cleaningUpRef.current) return;
       try {
         const data = JSON.parse(e.data);
-        handleWSMessage(data);
+        if (handleWSMessageRef.current) handleWSMessageRef.current(data);
       } catch {
         /* ignore */
       }
     };
 
-    wsRef.current = ws;
     return () => {
+      cleaningUpRef.current = true;
+      if (timerRef) clearTimeout(timerRef);
       ws.close();
-      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      wsRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, user?.couple_id]);
-
-  useEffect(() => {
-    const cleanup = connectWS();
-    return () => {
-      cleanup?.();
-      if (wsRef.current) wsRef.current.close();
-    };
-  }, [connectWS]);
 
   // Auto-start video call if mode=video
   useEffect(() => {
-    if (mode === "video" && wsConnected && partnerOnline && !isInCall) {
+    if (mode === "video" && wsConnected && partnerOnline) {
       startCall("video");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, wsConnected, partnerOnline]);
 
-  const handleWSMessage = useCallback((data) => {
+  const handleWSMessage = (data) => {
     switch (data.type) {
       case "chat_message":
         setMessages((prev) => [...prev, data]);
@@ -188,7 +193,10 @@ export default function WatchRoom() {
       default:
         break;
     }
-  }, []);
+  };
+
+  // Keep the ref current so WS onmessage always uses the latest handler
+  handleWSMessageRef.current = handleWSMessage;
 
   // Screen sharing
   const startScreenShare = async () => {
@@ -205,7 +213,9 @@ export default function WatchRoom() {
       };
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      wsRef.current?.send(JSON.stringify({ type: "webrtc_offer", sdp: pc.localDescription, purpose: "screen" }));
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({ type: "webrtc_offer", sdp: pc.localDescription, purpose: "screen" }));
+      }
       screenPcRef.current = pc;
       localScreenRef.current = stream;
       setIsSharing(true);
@@ -221,7 +231,9 @@ export default function WatchRoom() {
     screenPcRef.current = null;
     localScreenRef.current = null;
     setIsSharing(false);
-    wsRef.current?.send(JSON.stringify({ type: "screen_share_stop" }));
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "screen_share_stop" }));
+    }
   };
 
   // Video/Voice call
@@ -243,8 +255,10 @@ export default function WatchRoom() {
       };
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
-      wsRef.current?.send(JSON.stringify({ type: "call_offer", call_type: type }));
-      wsRef.current?.send(JSON.stringify({ type: "webrtc_offer", sdp: pc.localDescription, purpose: "call" }));
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({ type: "call_offer", call_type: type }));
+        wsRef.current.send(JSON.stringify({ type: "webrtc_offer", sdp: pc.localDescription, purpose: "call" }));
+      }
       callPcRef.current = pc;
       localCallRef.current = stream;
       setIsInCall(true);
@@ -255,7 +269,9 @@ export default function WatchRoom() {
   };
 
   const endCall = () => {
-    wsRef.current?.send(JSON.stringify({ type: "call_end" }));
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "call_end" }));
+    }
     endCallCleanup();
   };
 
@@ -364,7 +380,9 @@ export default function WatchRoom() {
 
   // Sync signals
   const sendSync = (action) => {
-    wsRef.current?.send(JSON.stringify({ type: `sync_${action}` }));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: `sync_${action}` }));
+    }
     showSyncNotification(action, "You");
   };
 
@@ -375,11 +393,17 @@ export default function WatchRoom() {
 
   // Chat handlers
   const sendMessage = (content, msgType) => {
-    wsRef.current?.send(JSON.stringify({ type: "chat_message", content, message_type: msgType }));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "chat_message", content, message_type: msgType }));
+    } else {
+      toast.error("Reconnecting... try again in a moment");
+    }
   };
 
   const sendReaction = (messageId, emoji) => {
-    wsRef.current?.send(JSON.stringify({ type: "reaction", message_id: messageId, emoji }));
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "reaction", message_id: messageId, emoji }));
+    }
   };
 
   return (

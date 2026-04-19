@@ -1,0 +1,54 @@
+{
+  "summary": "Frontend-only retest of DuoWatch after WatchRoom WebSocket lifecycle fix. Login, dashboard, partner info, navigation to WatchRoom, emoji toggle, back navigation, and chat-over-WebSocket ALL work correctly at the protocol level. Sending via keyboard Enter works end-to-end (frame >>> server >>> echo <<< render). However, clicking the chat-send-button is intercepted by the persistent #emergent-badge overlay which sits on top of the bottom-right chat input/send area, causing the click to be swallowed. Removing the badge via JS makes the button click work immediately. This is a LAYOUT overlap bug, not a WebSocket bug.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "WatchRoom > Chat input bar",
+        "issue": "The 'Made with Emergent' badge (<a id=\"emergent-badge\">) is fixed to the bottom-right of the viewport and overlaps the chat input and chat-send-button. Playwright confirms 'emergent-badge intercepts pointer events' on both [data-testid=chat-input] and [data-testid=chat-send-button]. Users on narrower sidebars cannot click Send at all. Workaround today: user must press Enter to send. Fix options: (a) add padding-bottom/margin-right to the chat input container so controls don't sit under the badge, (b) shift the badge out of the way on /watch route, or (c) add a safe-area wrapper that reserves the bottom-right 180x50 px for the badge.",
+        "selector": "[data-testid=chat-send-button]",
+        "priority": "CRITICAL"
+      },
+      {
+        "component": "WatchRoom WebSocket (dev-only warning)",
+        "issue": "Console still shows one 'WebSocket is closed before the connection is established' warning on initial mount due to React StrictMode double-mount. Functionally harmless (second WS opens and stays open), but noisy in dev console.",
+        "selector": "wss://.../api/ws?token=...",
+        "priority": "LOW"
+      }
+    ],
+    "integration_issues": [
+      {
+        "flow": "Chat send via button click",
+        "issue": "Clicking chat-send-button does not deliver message because #emergent-badge overlay blocks pointer. Proved by: with badge removed, click triggers WS frame send and server echoes chat_message back which renders as a bubble. With badge present, Enter key works but button click does not.",
+        "affected_selectors": ["[data-testid=chat-send-button]", "[data-testid=chat-input]"]
+      }
+    ],
+    "design_issues": [
+      {"screen": "WatchRoom chat sidebar", "issues": ["Send button (40px) sits at x~1314,y~847 which is under the Emergent badge. Reserve bottom-right space.", "Chat input right-edge padding insufficient - input goes under badge too."]},
+      {"screen": "Dashboard", "issues": ["Partner online/offline badge contrast still low on pastel background (unchanged from iter 1)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "CRITICAL (frontend layout): Prevent #emergent-badge from overlapping chat-send-button. Simplest fix in WatchRoom.js: add 'pr-20' (or margin-right ~160px on mobile/narrow, ~0 on lg) to the chat input container, OR wrap the Chat component's input row with 'pb-10 pr-20' bottom-right safe-area. Verify the send button's bounding box no longer intersects the badge region (~1240-1366 x 830-890).",
+    "LOW: Silence StrictMode double-mount WS warning by using a module-level mounted guard or AbortController pattern. Non-blocking.",
+    "INFO: Dashboard badge contrast still needs attention (carry-over from iter 1)."
+  ],
+  "critical_code_review_comments": [
+    "WatchRoom.js WS lifecycle is NOW correct: readyState checks on every send, cleaningUpRef guards, handleWSMessageRef pattern prevents stale closure. Confirmed by live WS frame capture: >>> chat_message ... <<< chat_message echo.",
+    "Chat.js handleSend logic is correct; handleSend() is not the bug. Button click is simply not reaching the handler due to the badge overlay.",
+    "WatchRoom.js still ~650 lines - consider extracting WebRTC (screen + call) hooks and WS signaling into a useWatchRoomRTC hook for maintainability.",
+    "Layout: the chat input container lacks bottom-right safe-area for the Emergent badge which is a fixed-position global element."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (not re-run; 21/21 from iter 1)", "frontend": "85% (all flows OK; single layout-overlay bug breaks button click)"},
+  "test_credentials": "alice@test.com/test123 (paired with Bob), bob@test.com/test123, admin@example.com/admin123",
+  "seed_data_creation": "None for this iteration. Two chat messages 'Hello Bob!' and 'Via Enter key' were persisted to Alice+Bob couple chat history during verification.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "The CRITICAL chat-send bug is NOT a WebSocket issue - WS works perfectly (verified via frame capture). It's a layout bug: #emergent-badge fixed element overlaps the chat-send-button at ~(1314,847). To verify fix: login as Alice, go to /watch, type text, click the send button (do NOT use Enter and do NOT remove the badge). Expect the message bubble to appear. Also verify the badge is still visible (do not hide it, just move chat controls out of its way).",
+  "rca_of_the_issue": "Bug: Clicking chat-send-button does nothing in WatchRoom. Reproduction: login as Alice, open /watch, type message, click send. Expected: WS frame sent, message bubble renders. Actual: nothing happens, input retains text. RCA: The Emergent preview badge (<a id=\"emergent-badge\" target=\"_blank\">) is globally fixed to the bottom-right corner of the viewport. The WatchRoom chat sidebar places its input row flush against the bottom-right edge, and at the default 1366-wide viewport the send button (40px wide, positioned at x=1314) is directly under the badge. Playwright's actionability check fails with '<a id=\"emergent-badge\"> intercepts pointer events'. With force=true playwright still dispatches a click but at the badge's DOM node, not the button, hence no handleSend call and no WS frame. Proof: removing the badge via document.getElementById('emergent-badge').remove() and re-clicking the send button immediately produces a WS chat_message frame and the echoed message renders. Mitigation: add bottom/right padding or a spacer to the chat input container so the send button does not overlap the badge region. Keyboard Enter works today because it bypasses the click/overlay path entirely."
+}
