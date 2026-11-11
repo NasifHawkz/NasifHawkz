@@ -2,45 +2,16 @@
 
 Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** on the deck page so the team can open it; **Share › Export** downloads PowerPoint or PDF).
 
-The cloud session could not download photos or open most fact-check websites, because its network blocks Wikimedia and many news sites. These are the jobs that need a normal internet connection.
-
 ---
 
-## 1. Add real photos (about 30 minutes)
+## 1. Photos: done ✓ (optional extras)
 
-**Easiest:** open Claude Code on the Mac, paste this whole file, and say *"Add these photos to my Tamasha deck and add a photo-credits slide."* Claude on your Mac has normal internet.
-**By hand:** download each photo from Wikimedia Commons, open the deck, select the slide, click **Image**, and upload it. Then add the photographer and licence to the sources slide.
+The deck now uses 13 freely licensed Wikimedia Commons photos on 13 slides. Each slide carries its own credit, and the full list is on the last slide.
 
-Use only photos whose Commons page says **CC0, Public domain, CC BY or CC BY-SA**. Never use NC, ND or "fair use" images. Credit format: *Photo: Name, CC BY-SA 4.0, via Wikimedia Commons*.
-
-**Look tip (matches the new design):** put the photo inside a pink (#FF2D7A) or marigold (#FFA400) block and set it to black-and-white with *multiply* blending: `filter:grayscale(1) contrast(1.2); mix-blend-mode:multiply`. That gives the duotone, riso-poster look.
-
-| Slide | Where the photo goes | What to look for |
-|---|---|---|
-| cover | right side, behind/instead of the marigold | the most striking Lavani performance photo |
-| lavani | left column, replacing or behind the big लावणी word | close-up of a Lavani dancer (expression, nath, pallu) |
-| the-phad | the Nachya card | **File:A male lavani folk jatra artist getting ready for performance.jpg** (inspect it first) |
-| vithabai | the tall pink block | a freely licensed portrait of Vithabai, if one exists (probably not; then keep the word) |
-| artists | small circles or squares next to names | portraits of Sulochana Chavan (Category:Sulochana Chavan), Annabhau Sathe (India Post stamp, check licence), Shahir Sable |
-| two-forms | one photo per half | a jatra stage or tent (Dholki Phad) and an indoor Lavani stage (Sangeet Bari) |
-| behind-curtain | faint full-slide background | a troupe tent, trucks, or artists backstage |
-| costumes | the three cards | a nauvari saree, a nath (nose ring), a man in a pheta |
-| lavani-live, thanks | full-slide background with a dark overlay | a group of Lavani dancers mid-dance |
-
-Starting points on Commons: **Category:Lavani**, which has these files (licences not yet checked):
-- Lavani Dancers.jpg
-- Lavani Dance.jpg
-- Lavani Dancer.jpg
-- Lavani Group.jpg
-- Lavani Artistes.jpg
-- Lavani 1.jpg
-- Lavani 2.jpg
-- Lavni.jpg
-- "Lavani performance in First Enclosure of Mahalaxmi Racecourse.jpg"
-- Surekha Punekar.jpg
-- "Momin Kavathekar receiving Vithabai Jivan Gaurav Award 2018 in presence of Shri Vinod Tawade.jpg"
-
-Also look in Category:Tamasha, Category:Sulochana Chavan, Category:Dholak, Category:Nauvari and Category:Shaniwar Wada.
+**Optional, if you have time** (use only photos whose Commons page says CC0, Public domain, CC BY or CC BY-SA):
+- **the-phad:** add *File:A male lavani folk jatra artist getting ready for performance.jpg* (CC BY-SA 4.0, Tapas Kumar Halder) next to the Nachya entry. The cloud session couldn't download it because Wikimedia was rate-limiting.
+- **artists:** small portraits, e.g. Category:Sulochana Chavan, or Surekha Punekar.jpg (CC BY-SA 3.0).
+- **Your own photos:** after the show, put a photo of your team in costume on the thank-you slide.
 
 ---
 
