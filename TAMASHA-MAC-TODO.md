@@ -6,9 +6,13 @@ Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** 
 
 ## 1. Photos: done ✓ (optional extras)
 
-The deck now uses 13 freely licensed Wikimedia Commons photos on 13 slides. Each slide carries its own credit, and the full list is on the last slide.
+The deck is now photo-led: about 40 real Tamasha and Lavani photos across the slides, most from village jatra stages. They come from Wikimedia Commons and from Flickr via Openverse. Slides carry little text; the details are in each slide's speaker notes. All credits are on the last slide, not on each slide.
 
-**Optional, if you have time** (use only photos whose Commons page says CC0, Public domain, CC BY or CC BY-SA):
+**Licences:** some Flickr photos are CC BY-NC or CC BY-NC-SA (non-commercial). That's fine for a class presentation with credit. If the deck is ever used commercially, replace those photos first.
+
+**Not real people:** the photos on the Vithabai, artists and cinema slides are not of those artists or from those films; the speaker notes say so. If someone asks, say it plainly.
+
+**Optional, if you have time** (use only photos whose page says CC0, Public domain, CC BY or CC BY-SA, or an NC licence for non-commercial use):
 - **the-phad:** add *File:A male lavani folk jatra artist getting ready for performance.jpg* (CC BY-SA 4.0, Tapas Kumar Halder) next to the Nachya entry. The cloud session couldn't download it because Wikimedia was rate-limiting.
 - **artists:** small portraits, e.g. Category:Sulochana Chavan, or Surekha Punekar.jpg (CC BY-SA 3.0).
 - **Your own photos:** after the show, put a photo of your team in costume on the thank-you slide.
