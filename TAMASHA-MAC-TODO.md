@@ -4,15 +4,13 @@ Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** 
 
 ---
 
-## 1. Look, photos and motion: done ✓
+## 1. Look and photos: done ✓
 
 **The look.** Every slide is designed as a travelling troupe's printed handbill: newsprint, haldi yellow, kumkum red, rani pink and black; one big Marathi word per slide; photographs printed as halftones or in one ink. 24 slides, about 40 photographs.
 
-**Motion.** In Present mode each slide "prints" itself: the picture, then the big Marathi word stamped on, then the text, then the small pasted label. Everything plays by itself, so **a click always means next slide**. Two special moments: the small गण on the programme grows into the giant गण, and विठाबाई glides from the poster of names onto her own slide.
-
 **How to present.**
-- Present from the link (the **Present** button). Motion only exists there.
-- Test a PDF export before the day as a backup. A PDF has no motion, and an editable PowerPoint may lose the printed-photo effect: neither export has been tested.
+- Present from the link (the **Present** button). Slides appear whole, with a plain fade between them; there are no animations.
+- Test a PDF export before the day as a backup. An editable PowerPoint may lose the printed-photo effect: neither export has been tested.
 - The big Marathi words are drawings, not text boxes: they cannot be retyped in the editor. Ask Claude to change one.
 
 **Photo licences.** Photos come from Wikimedia Commons and Flickr; all credits are on the last slide. Some Flickr photos are CC BY-NC or CC BY-NC-SA (non-commercial): fine for a class presentation with credit, not for commercial use.
@@ -75,7 +73,7 @@ Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 20
 - each talking slide: under 40 seconds. The speaker notes hold more than fits: pick the key line and keep the rest for questions.
 
 **Tech run:**
-- run the whole deck once in Present mode, so everyone has seen the slides build
+- run the whole deck once in Present mode on the room's projector
 - switching from the slides to the video and back
 - the start points of the mp3s
 - the Eetha blackout and flashlight
