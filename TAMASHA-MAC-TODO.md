@@ -1,43 +1,53 @@
 # Tamasha of Maharashtra: finish on the Mac
 
-Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** on the deck page so the team can open it; **Share › Export** downloads PowerPoint or PDF).
+Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** on the deck page so the team can open it).
 
 ---
 
-## 1. Photos: done ✓ (optional extras)
+## 1. Look, photos and motion: done ✓
 
-The deck is now photo-led: about 40 real Tamasha and Lavani photos across the slides, most from village jatra stages. They come from Wikimedia Commons and from Flickr via Openverse. Slides carry little text; the details are in each slide's speaker notes. All credits are on the last slide, not on each slide.
+**The look.** Every slide is designed as a travelling troupe's printed handbill: newsprint, haldi yellow, kumkum red, rani pink and black; one big Marathi word per slide; photographs printed as halftones or in one ink. 24 slides, about 40 photographs.
 
-**Licences:** some Flickr photos are CC BY-NC or CC BY-NC-SA (non-commercial). That's fine for a class presentation with credit. If the deck is ever used commercially, replace those photos first.
+**Motion.** In Present mode each slide "prints" itself: the picture, then the big Marathi word stamped on, then the text, then the small pasted label. Everything plays by itself, so **a click always means next slide**. Two special moments: the small गण on the programme grows into the giant गण, and विठाबाई glides from the poster of names onto her own slide.
 
-**Not real people:** the photos on the Vithabai, artists and cinema slides are not of those artists or from those films; the speaker notes say so. If someone asks, say it plainly.
+**How to present.**
+- Present from the link (the **Present** button). Motion only exists there.
+- Test a PDF export before the day as a backup. A PDF has no motion, and an editable PowerPoint may lose the printed-photo effect: neither export has been tested.
+- The big Marathi words are drawings, not text boxes: they cannot be retyped in the editor. Ask Claude to change one.
 
-**Optional, if you have time** (use only photos whose page says CC0, Public domain, CC BY or CC BY-SA, or an NC licence for non-commercial use):
-- **the-phad:** add *File:A male lavani folk jatra artist getting ready for performance.jpg* (CC BY-SA 4.0, Tapas Kumar Halder) next to the Nachya entry. The cloud session couldn't download it because Wikimedia was rate-limiting.
-- **artists:** small portraits, e.g. Category:Sulochana Chavan, or Surekha Punekar.jpg (CC BY-SA 3.0).
-- **Your own photos:** after the show, put a photo of your team in costume on the thank-you slide.
+**Photo licences.** Photos come from Wikimedia Commons and Flickr; all credits are on the last slide. Some Flickr photos are CC BY-NC or CC BY-NC-SA (non-commercial): fine for a class presentation with credit, not for commercial use.
+
+**The Eetha poster** on the cinema slide is the official film poster (copyright Maddock Films). It is fine to show in class and is credited on the last slide, but it is not a free-licence image. The copy is small (283 px wide); if you find a sharper official one, select the poster in the editor and replace it.
+
+**Not real people.** Apart from the Eetha poster, no photograph shows a named artist or a film. The slides or their speaker notes say so (Vithabai, artists, the Nachya photo, the documentary slide's crowd photo). If someone asks, say it plainly.
+
+**Optional**
+- After the show, put a photo of your team in costume on the thank-you slide.
 
 ---
 
-## 2. Check facts before presenting (research team: Lekha)
+## 2. Facts: checked online on 16 Nov 2026
 
-The research ran out of searches, so these are on the slides but marked "check":
-- Vithabai: 1935–2002; her Sangeet Natak Akademi award and year; the state's *Vithabai Narayangaonkar Jeevan Gaurav* award (since when). Check on the Marathi Vishwakosh and in newspaper obituaries.
-- Sulochana Chavan: Padma Shri (2022?).
-- Eetha: the Hindi biopic by Laxman Utekar with Shraddha Kapoor. Is it released, and what is the exact title spelling?
-- Touring season (after Dasara until the monsoon) and Narayangaon as the booking hub. PARI, "Days and nights of toil on the tamasha circuit".
-- After 1947, the Bombay government's censorship of Tamasha: get the year and the body's name.
-- Ambedkar urging Dalits to leave stigmatised performance work: Shailaja Paik, *The Vulgarity of Caste* (2022).
+Changed on the slides after the check:
+- **Eetha** is announced for cinemas on **4 December 2026** (moved from 28 August; trailer 30 October). The slide's label now says "In cinemas 4 Dec 2026". If the date moves, change the label.
+- **Natarang**: the hero is a poor farm labourer who ends up playing the nachya, not a wrestler.
+- **Touring season**: PARI gives it as **September to May**, about eight months (one big troupe plays at least 210 shows). The slide said "Dasara to the monsoon".
+- **Raghuveer Khedkar** received the **Padma Shri in 2026**; added to his line.
+- **History slide**: the Mughal-camp step is now labelled "1600s" and no longer uses a photo of Shaniwar Wada (a Peshwa fort) to illustrate it.
+- **मंजिरी** is the Marathi name of the small cymbals (the slide had मंजिरा).
 
-**Bonus facts to ADD only after you confirm them:**
+Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 2002; the labour story as widely reported; the state award in her name dates from 2006 and Kantabai Satarkar was its first recipient; Sulochana Chavan's Padma Shri (2022); Narayangaon as the booking hub; the films' years and directors; the reading list.
+
+**Still for Lekha to confirm** (the web check could not settle them):
+- The Bombay government's ban on Tamasha and the reform committee after it: usually given as **1948**. The slide only says officials tried to "clean it up"; do not quote a year until you have checked Rege (1995).
+- "Often traced to entertainers in Mughal army camps": a common account, kept hedged on the slide. Abrams's thesis dates the form's beginnings to the late 1500s and early 1600s.
+- A Marathi speaker on the team should read every Marathi word on the slides once.
+
+**Bonus facts to ADD only after you confirm them**
 - Guinness World Record, *Largest Lavani dance (single venue)*: reportedly 1,326 dancers, Vita (Sangli), 17 Dec 2017.
 - "Jai Jai Maharashtra Maza", sung by Shahir Sable, adopted as Maharashtra's state song in 2023.
 - Honaji Bala's "Ghanashyam Sundara" and V. Shantaram's film *Amar Bhoopali* (1951).
-- *Natarang* (2010): National Film Award for Best Marathi Feature Film?
-- Ajay–Atul's "Chikni Chameli" (Agneepath, 2012) is a Hindi version of their Marathi "Kombdi Palali" (Jatra, 2006): a good example for "On screens today".
-- Annabhau Sathe's 1958 line: the earth rests not on the serpent's head but on the strength of Dalits and workers. Paraphrase it; don't quote it exactly.
-
-Best sources to open: Marathi Vishwakosh (तमाशा, लावणी, वग); PARI's tamasha articles; MAP Academy "Tamasha"; Britannica "Tamasha"; Sharmila Rege (1995, 2002); Shailaja Paik (2017, 2022); Bhushan Korgaonkar, *Sangeet Bari*.
+- Ajay–Atul's "Chikni Chameli" (Agneepath, 2012) is a Hindi version of their Marathi "Kombdi Palali" (Jatra, 2006).
 
 ---
 
@@ -48,7 +58,7 @@ Best sources to open: Marathi Vishwakosh (तमाशा, लावणी, व�
 | 0:00–0:45 | Cover, Programme | Nasif | Lights down; fairy lights and sunset lamps on; dholki roll (Sahil) |
 | 0:45–1:30 | Gan (LIVE) | Mayura | Lamp on Mayura; soft dholki |
 | 1:30–2:30 | What is Tamasha, Four things | Nasif | — |
-| 2:30–4:30 | Origins, Two forms, Running order, The phad | Nasif, Lekha | A costumed performer waves at the Nachya card |
+| 2:30–4:30 | Origins, Two forms, Running order, The phad | Nasif, Lekha | A costumed performer waves at the Nachya arch |
 | 4:30–5:45 | Sound, Lavani | Lekha/Sahil (sound); Nayana/Rishika demo a move | Instrument clips |
 | 5:45–6:45 | Artists, Vithabai | Nasif | — |
 | 6:45–8:30 | Eetha (LIVE) | Rishika | Blackout, flashlight spot, dholki heartbeat |
@@ -62,9 +72,10 @@ Best sources to open: Marathi Vishwakosh (तमाशा, लावणी, व�
 - documentary: 1:30
 - Eetha: 1:45
 - dance: 1:15
-- each talking slide: under 40 seconds
+- each talking slide: under 40 seconds. The speaker notes hold more than fits: pick the key line and keep the rest for questions.
 
 **Tech run:**
+- run the whole deck once in Present mode, so everyone has seen the slides build
 - switching from the slides to the video and back
 - the start points of the mp3s
 - the Eetha blackout and flashlight
