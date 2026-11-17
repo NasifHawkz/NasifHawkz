@@ -15,7 +15,7 @@ Deck: https://claude.ai/artifact/6JPCXwjtAyBSwA4RByUqR1 (private: use **Share** 
 
 **Photo licences.** Photos come from Wikimedia Commons and Flickr; all credits are on the last slide. Some Flickr photos are CC BY-NC or CC BY-NC-SA (non-commercial): fine for a class presentation with credit, not for commercial use.
 
-**The Eetha poster** on the cinema slide is the official film poster (copyright Maddock Films). It is fine to show in class and is credited on the last slide, but it is not a free-licence image. The copy is small (283 px wide); if you find a sharper official one, select the poster in the editor and replace it.
+**The Eetha poster** on the cinema slide is the official film poster (copyright Maddock Films). The Eetha cue slide uses the same poster, cropped to Shraddha Kapoor as Vithabai and printed in red; its caption says so. It is fine to show in class and is credited on the last slide, but it is not a free-licence image. The copy is small (283 px wide); if you find a sharper official one, select the poster in the editor and replace it.
 
 **Not real people.** Apart from the Eetha poster, no photograph shows a named artist or a film. The slides or their speaker notes say so (Vithabai, artists, the Nachya photo, the documentary slide's crowd photo). If someone asks, say it plainly.
 
@@ -42,6 +42,10 @@ A second, independent check on 17 Nov 2026 went through 276 separate claims on t
 - **Life on the road**: "Eight months touring villages" (the fair season itself is only about April to mid-May).
 - **Reading list**: Sangeet Bari now carries its year (2014).
 
+A third pass on 17 Nov 2026 checked the claims the second pass could not reach (the films, the costume terms, the reading list). It confirmed the film years, directors and plots, Ganpat Patil's nachya roles, and the journals behind Rege (1995, 2002) and Paik (2022). Two small changes:
+- **Cinema**: the film is now spelled **Pinjara**, matching the Marathi पिंजरा and its usual English title.
+- **Reading list**: the year added to Sangeet Bari was removed again, because no source confirmed it.
+
 Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 2002; the labour story as widely reported; the state award in her name dates from 2006 and Kantabai Satarkar was its first recipient; Sulochana Chavan's Padma Shri (2022); Narayangaon as the booking hub; the films' years and directors; the reading list.
 
 **Still for Lekha to confirm** (the web check could not settle them):
@@ -50,6 +54,7 @@ Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 20
 - The Bombay government's ban on Tamasha and the reform committee after it: usually given as **1948**. The slide only says officials tried to "clean it up"; do not quote a year until you have checked Rege (1995).
 - "Often traced to entertainers in Mughal army camps": a common account, kept hedged on the slide. Abrams's thesis dates the form's beginnings to the late 1500s and early 1600s.
 - A Marathi speaker on the team should read every Marathi word on the slides once.
+- Not confirmed online: the year and publisher of Korgaonkar's *Sangeet Bari*, Paik's 2017 article "Mangala Bansode and the Social Life of Tamasha" (journal: *Biography*), and the edition of Gargi's *Folk Theater of India* (the slide says 1966).
 
 **Bonus facts to ADD only after you confirm them**
 - Guinness World Record, *Largest Lavani dance (single venue)*: reportedly 1,326 dancers, Vita (Sangli), 17 Dec 2017.
