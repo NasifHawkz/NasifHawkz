@@ -34,9 +34,19 @@ Changed on the slides after the check:
 - **History slide**: the Mughal-camp step is now labelled "1600s" and no longer uses a photo of Shaniwar Wada (a Peshwa fort) to illustrate it.
 - **मंजिरी** is the Marathi name of the small cymbals (the slide had मंजिरा).
 
+A second, independent check on 17 Nov 2026 went through 276 separate claims on the slides and in the notes. None was plainly wrong; these were reworded:
+- **Four things**: सोंगाड्या is a person, the clown, so its label now reads "The clown" with "Satire: his jokes…" under it (it was labelled "Satire").
+- **History**: the roots line now says "Devotional forms" (a kirtan is not night-long). The notes say "the later Peshwas, to 1818" and "Bajirao I" for the statue.
+- **The troupe**: the musicians are now साथीदार (accompanists), the word the Marathi Vishwakosh uses; वाजंत्री is a ceremonial band.
+- **Vithabai**: Samradni means "empress", so the line reads "Empress of Tamasha". In English she is usually called the Queen of Tamasha, which stays on the names slide.
+- **Life on the road**: "Eight months touring villages" (the fair season itself is only about April to mid-May).
+- **Reading list**: Sangeet Bari now carries its year (2014).
+
 Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 2002; the labour story as widely reported; the state award in her name dates from 2006 and Kantabai Satarkar was its first recipient; Sulochana Chavan's Padma Shri (2022); Narayangaon as the booking hub; the films' years and directors; the reading list.
 
 **Still for Lekha to confirm** (the web check could not settle them):
+- Sources disagree on two dates, and the notes say so: the award in Vithabai's name (2005 in the Marathi Vishwakosh, 2006 elsewhere) and Tamasha's beginnings (late 1500s, the 1600s or the early 1700s, depending on the source).
+- The second check could not open the Flickr and Wikimedia pages to re-confirm each photo credit and licence; they were recorded when the photos were downloaded.
 - The Bombay government's ban on Tamasha and the reform committee after it: usually given as **1948**. The slide only says officials tried to "clean it up"; do not quote a year until you have checked Rege (1995).
 - "Often traced to entertainers in Mughal army camps": a common account, kept hedged on the slide. Abrams's thesis dates the form's beginnings to the late 1500s and early 1600s.
 - A Marathi speaker on the team should read every Marathi word on the slides once.
@@ -70,7 +80,7 @@ Confirmed, no change needed: Vithabai Narayangaonkar, July 1935 to 15 January 20
 - documentary: 1:30
 - Eetha: 1:45
 - dance: 1:15
-- each talking slide: under 40 seconds. The speaker notes hold more than fits: pick the key line and keep the rest for questions.
+- each talking slide: under 40 seconds. Every slide's notes now start with a SAY line sized to its time; the rest is under IF ASKED (for questions) and ON THE SLIDE (what the Marathi means and what each photo is).
 
 **Tech run:**
 - run the whole deck once in Present mode on the room's projector
